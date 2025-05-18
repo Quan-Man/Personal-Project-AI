@@ -12,12 +12,10 @@
   - Tìm kiếm có thông tin: Greedy, A*, IDA*.
   - Tìm kiếm cục bộ: Beam Search, Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Genetic Algorithm, Simulated Annealing.
   - Môi trường phức tạp: AND-OR Search, Belief State Search, Searching with Partial Observation.
-  - CSPs: AC-3, Backtracking, Backtracking with Forward Checking.
+  - CSPS: AC-3, Backtracking, Backtracking with Forward Checking.
   - Học tăng cường: Q-Learning.
 
 - Đánh giá hiệu suất của các thuật toán dựa trên số bước và thời gian thực hiện.
-
-- Cung cấp khả năng tùy chỉnh trạng thái ban đầu và kiểm tra tính khả thi của bài toán.
 
 ### Dữ liệu thử nghiệm
 
