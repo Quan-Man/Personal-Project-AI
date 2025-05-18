@@ -8,12 +8,12 @@
 
 - Triển khai 6 nhóm thuật toán:
 
-  - Tìm kiếm không có thông tin: BFS, DFS, UCS, IDS.
-  - Tìm kiếm có thông tin: Greedy, A*, IDA*.
-  - Tìm kiếm cục bộ: Beam Search, Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Genetic Algorithm, Simulated Annealing.
-  - Môi trường phức tạp: AND-OR Search, Belief State Search, Searching with Partial Observation.
+  - Uninformed Search: BFS, DFS, UCS, IDS.
+  - Informed Search: Greedy, A*, IDA*.
+  - Local Search: Beam Search, Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Genetic Algorithm, Simulated Annealing.
+  - Complex Environment: AND-OR Search, Belief State Search, Searching with Partial Observation.
   - CSPS: AC-3, Backtracking, Backtracking with Forward Checking.
-  - Học tăng cường: Q-Learning.
+  - Reinforcement Learning: Q-Learning.
 
 - Đánh giá hiệu suất của các thuật toán dựa trên số bước và thời gian thực hiện.
 
@@ -35,13 +35,12 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính: Bài toán 8-puzzle được mô hình hóa như một bài toán tìm kiếm không gian trạng thái, bao gồm:
   - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
   - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
   - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
-- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu, thể hiện đường đi tối ưu (đối với UCS) hoặc đường đi khả thi (đối với BFS, DFS, IDS).
+- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
 **Nhận xét về hiệu suất:**
 
@@ -54,9 +53,12 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính: Ngoài các thành phần cơ bản, thêm hàm heuristic (Manhattan Distance) để định hướng tìm kiếm.
-- Hàm heuristic: Hàm ước lượng chi phí từ trạng thái hiện tại đến mục tiêu (dùng trong các thuật toán như A*).
-- Solution: Là đường đi ngắn nhất (A*) hoặc đường đi khả thi (Greedy, IDA*) dựa trên heuristic.
+- Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
+  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
+  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
+  - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
+- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
 **Nhận xét về hiệu suất:**
 
@@ -64,12 +66,17 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán. Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
 - IDA*: Tiết kiệm bộ nhớ hơn A* bằng cách giới hạn ngưỡng heuristic, nhưng có thể chậm hơn với các trạng thái có heuristic phức tạp hoặc không gian trạng thái lớn.
 
-### Các thuật toán Tìm kiếm cục bộ (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm,)
+### Các thuật toán Tìm kiếm cục bộ (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính: Sử dụng heuristic để cải tiến trạng thái cục bộ, với Beam Search giới hạn số nút, Genetic Algorithm sử dụng quần thể và đột biến.
-- Solution: Đường đi khả thi, không nhất thiết tối ưu.
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
+  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
+  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
+  - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
+- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
+
 
 **Nhận xét về hiệu suất:**
 
