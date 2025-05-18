@@ -36,8 +36,8 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
   - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
-  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
-  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Trạng thái ban đầu: [[2, 6, 5], [0, 8, 7], [4, 3, 1]].
+  - Trạng thái mục tiêu: [[1, 2, 3], [4, 5, 6], [7, 8, 0]].
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
@@ -46,7 +46,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 #### BFS:
 
-https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
+![bfs](https://github.com/user-attachments/assets/1684b10b-95a1-4f45-831b-649b4ef6d163)
 
 #### DFS:
 
@@ -78,8 +78,8 @@ https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
 - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
-  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
-  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Trạng thái ban đầu: [[2, 6, 5], [0, 8, 7], [4, 3, 1]].
+  - Trạng thái mục tiêu: [[1, 2, 3], [4, 5, 6], [7, 8, 0]].
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
@@ -115,89 +115,108 @@ https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
   - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
-  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
-  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Trạng thái ban đầu: [[2, 6, 5], [0, 8, 7], [4, 3, 1]].
+  - Trạng thái mục tiêu: [[1, 2, 3], [4, 5, 6], [7, 8, 0]].
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
+**Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
+
+#### Beam Search:
+
+![beam](https://github.com/user-attachments/assets/966485db-6413-418f-8e1d-3a86934414cb)
+
 **Nhận xét về hiệu suất:**
 
-- Beam Search: Hiệu quả với beam_width nhỏ, giảm bộ nhớ so với tìm kiếm toàn cục, nhưng có thể bỏ lỡ lời giải nếu beam_width quá hẹp hoặc không gian trạng thái quá lớn.
-- Simple Hill Climbing: Nhanh và đơn giản, nhưng dễ bị kẹt ở cực trị cục bộ, dẫn đến thất bại nếu không có đường đi trực tiếp giảm heuristic.
-- Steepest-Ascent Hill Climbing: Cải tiến hơn Simple Hill Climbing bằng cách chọn trạng thái tốt nhất trong số các lân cận, nhưng vẫn dễ bị kẹt ở cực trị cục bộ và yêu cầu nhiều phép tính hơn.
-- Stochastic Hill Climbing: Linh hoạt hơn nhờ chọn ngẫu nhiên trong số các trạng thái tốt hơn, giảm nguy cơ kẹt ở cực trị cục bộ, nhưng hiệu suất phụ thuộc vào may rủi.
-- Genetic Algorithm: Rất linh hoạt và có thể tìm ra lời giải trong không gian phức tạp, nhưng cần nhiều thời gian huấn luyện và tài nguyên do sử dụng quần thể và tiến hóa qua nhiều thế hệ.
-- Simulated Annealing: Khắc phục nhược điểm của Hill Climbing bằng cách cho phép chấp nhận trạng thái xấu hơn với xác suất, tránh được cực trị cục bộ. Hiệu suất tốt hơn Hill Climbing trong các trạng thái phức tạp, nhưng phụ thuộc vào tham số nhiệt độ (T, cooling_rate) và có thể chậm nếu cần nhiều bước để hội tụ.
+- Simple Hill Climbing: Hiệu suất kém trong 8-Puzzle do thiếu cơ chế thoát khỏi đỉnh cục bộ, không phù hợp với bài toán cần đường đi chính xác.
+- Steepest-Ascent Hill Climbing: Tốt hơn Simple Hill Climbing, nhưng vẫn không hiệu quả do không gian tìm kiếm phức tạp của 8-Puzzle.
+- Stochastic Hill Climbing: Tính ngẫu nhiên không đủ mạnh để giải bài toán 8-Puzzle, hiệu suất kém.
+- Simulated Annealing: Có tiềm năng hơn Hill Climbing, nhưng thất bại do tham số không tối ưu.
+- Beam Search: thuật toán duy nhất trong nhóm thành công, với thời gian cực nhanh (0.02 giây) nhờ giới hạn khám phá trong k trạng thái. Tuy nhiên, đường đi 29 bước chưa tối ưu, phù hợp khi ưu tiên tốc độ hơn.
+- Genetic Algorithm: Không phù hợp với 8-Puzzle do bản chất bài toán cần chuỗi di chuyển tuần tự, không phải tối ưu hóa cấu hình.
+  Tóm lại: Không áp dụng được do không tìm thấy giải pháp. Beam Search thành công nhờ giữ k trạng thái, khám phá rộng hơn Hill Climbing. Tuy nhiên không tối ưu, phụ thuộc k. Nếu k quá nhỏ, có thể thất bại như các thuật toán khác.
 
 ### 2.4. Complex Environment (AND-OR Search, Belief State Search, Searching with Partial Observation)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle Trong môi trường phức tạp, bao gồm belief states (tập hợp trạng thái khả thi).
-  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0). Cấu hình ban đầu hoặc belief state ban đầu.
-  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối. Cấu hình mong muốn hoặc belief state chứa mục tiêu.
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle. Trong môi trường phức tạp, bao gồm belief states (tập hợp trạng thái khả thi).
+  - Trạng thái ban đầu: [[2, 6, 5], [0, 8, 7], [4, 3, 1]]. Cấu hình ban đầu hoặc belief state ban đầu.
+  - Trạng thái mục tiêu: [[1, 2, 3], [4, 5, 6], [7, 8, 0]]. Cấu hình mong muốn hoặc belief state chứa mục tiêu.
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
+**Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
+
+#### Belief State:
+
+![bs](https://github.com/user-attachments/assets/9a503027-eee3-4727-b530-ec08d18b3e78)
+
+#### Searching with Partial Observation:
+
+![swpo](https://github.com/user-attachments/assets/07dcd7da-7902-4eea-981d-0689cd582a5c)
+
+**So sánh hiệu suất các thuật toán:**
+
+![image](https://github.com/user-attachments/assets/f45cdc51-a3b9-420c-9fcf-cff98147c20d)
+
 **Nhận xét về hiệu suất:**
 
-- AND-OR Search: Phù hợp với các bài toán có phụ thuộc logic phức tạp, nhưng hiệu suất thấp trong 8-puzzle do không tận dụng được cấu trúc tuyến tính, và dễ bị giới hạn bởi độ sâu tối đa.
-- Belief State Search: Hiệu quả trong môi trường không chắc chắn (partial observation), nhưng tốn nhiều bộ nhớ và thời gian để quản lý và cập nhật belief states, đặc biệt với số lượng ô không xác định lớn.
-- Searching with Partial Observation: Linh hoạt và thích nghi tốt với thông tin quan sát từng bước, nhưng hiệu suất phụ thuộc vào độ chính xác của quan sát và có thể thất bại nếu belief states không còn khả thi.
+- AND-OR Search: Kkhông tìm được giải pháp do không phù hợp với 8-Puzzle chuẩn.
+- Belief State Search: Tốn thời gian do quản lý belief states, nhưng thất bại trong việc đạt đích dù có 23 bước (bằng đường đi tối ưu). Điều này cho thấy thuật toán có tiềm năng nhưng triển khai chưa đúng.
+- Searching with Partial Observation: Đạt được đường đi tối ưu (23 bước) với thời gian hợp lý (1.36 giây).
+  Tóm lại: Searching with Partial Observation hiệu quả, nhưng không cần thiết cho 8-Puzzle chuẩn. Belief State Search có thể tận dụng tiềm năng. AND-OR Search không phù hợp.
 
 ### 2.5. CSPS (AC-3, Backtracking, Backtracking with Forward Checking)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính:
-
-  - Biến: Các ô trên lưới 3x3.
-  - Miền giá trị: Các số từ 0-8.
-  - Ràng buộc: Mỗi số phải duy nhất (uniqueness constraint).
-
-- Solution: Đường đi từ trạng thái ban đầu đến mục tiêu, thỏa mãn tất cả ràng buộc.
-
-  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
-  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
-  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
-  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
-  - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
-- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
+  - Variables: mỗi biến đại diện cho một giá trị từ 0 đến 8 cần được gán vào một vị trí trên bảng 3x3.
+  - Domains (Miền giá trị) Mỗi biến (số từ 0 đến 8) có miền là các vị trí từ 0 đến 8 (trên bảng 3x3). Tức là mỗi số có thể nằm ở bất kỳ ô nào trên bàn cờ.
+  - Constraints (Ràng buộc) Điều kiện là mỗi số chỉ được gán vào đúng một vị trí duy nhất, không được trùng nhau (Trong ac_3, ràng buộc được lọc qua hàm revise, đảm bảo không có hai biến nào có thể trùng vị trí hợp) lệ.
+- Solution: Không có 2 biến nào trùng vị trí (ràng buộc all-different), dựng được bàn cờ đúng bằng trạng thái goal
 
 **Nhận xét về hiệu suất:**
 
-- AC-3: Hiệu quả hơn nhờ duy trì tính nhất quán cung trong suốt quá trình tìm kiếm, giảm số trạng thái cần kiểm tra. Tuy nhiên, việc chạy có thể tốn thời gian với các trạng thái phức tạp.
-- Backtracking Search: Cơ bản và dễ triển khai, nhưng hiệu suất thấp do phải thử nghiệm nhiều trạng thái không hợp lệ, đặc biệt với không gian trạng thái lớn.
-- Backtracking with Forward Checking: Cải thiện hiệu suất bằng cách loại bỏ sớm các giá trị không hợp lệ, giảm số lượng trạng thái cần kiểm tra, nhưng vẫn có thể chậm nếu ràng buộc phức tạp.
+- AC-3: Không phù hợp với 8-Puzzle vì không giải quyết được bản chất tìm kiếm đường đi.
+- Backtracking Search: Không phù hợp với 8-Puzzle vì không giải quyết được bản chất tìm kiếm đường đi.
+- Backtracking with Forward Checking: Dù nhanh hơn Backtracking nhưng vẫn không phù hợp.
 
 ### 2.6. Reinforcement Learning (Q-Learning)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính: Sử dụng Q-Table, phần thưởng, và chiến lược epsilon-greedy để học.
-- Solution: Đường đi học được từ huấn luyện.
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle.
+  - Trạng thái ban đầu: [[2, 6, 5], [0, 8, 7], [4, 3, 1]].
+  - Trạng thái mục tiêu: [[1, 2, 3], [4, 5, 6], [7, 8, 0]].
+  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
+  - Reward:	Số điểm nhận được khi chuyển trạng thái, -1 (bình thường), +200 (nếu đạt goal)
+  - Q-function	Hàm đánh giá giá trị hành động tại một trạng thái cụ thể
+  - Learning Algorithm: Q-value để cải thiện chính sách qua từng bước
+- Solution: Tìm một chuỗi hành động (path) dẫn từ trạng thái start đến goal_state sao cho tối đa hóa tổng phần thưởng nhận được.
 
 **Nhận xét về hiệu suất:**
 
-- Q-Learning: Hiệu quả khi được huấn luyện tốt với số lượng episode lớn, có khả năng học đường đi tối ưu theo thời gian. Tuy nhiên, cần nhiều thời gian huấn luyện ban đầu và hiệu suất ban đầu có thể kém do khám phá ngẫu nhiên (epsilon-greedy).
+- Q-Learning: Không phù hợp với 8-Puzzle do yêu cầu huấn luyện lâu và không gian trạng thái lớn.
 
 ## Kết luận
 
 Dự án 8-Puzzle Solver đã thành công trong việc triển khai 6 nhóm thuật toán với giao diện đồ họa trực quan. Kết quả đạt được bao gồm:
 
-- **GUI**: Người dùng có thể nhập trạng thái tùy chỉnh, quan sát tiến trình giải qua animation.
+- **GUI**: Người dùng dễ dàng quan sát tiến trình giải qua animation.
 - **Triển khai thuật toán**: Đa dạng từ cơ bản (BFS, DFS) đến nâng cao (Belief State Search, Q-Learning).
 - **Hiệu suất**:
-  - **Nhanh nhất**: A* và IDA* nhờ heuristic hiệu quả.
-  - **Chậm nhất**: GA và Q-Learning do cần huấn luyện.
-  - Belief State Search hiệu quả trong môi trường không chắc chắn, nhưng tốn tài nguyên.
+  - **Nhanh nhất**: Greedy Search (Informed Search) và Beam Search (Local Search) - 0.02 giây (cả hai). Greedy nhanh hơn một chút do chỉ chọn một trạng thái lân cận, nhưng Beam Search cho đường đi ngắn hơn (29 bước so với 49 bước).
+  - **Chậm nhất**: IDS (Uninformed Search). Do lặp lại tìm kiếm với độ sâu tăng dần, dẫn đến khám phá lặp lại nhiều nút, đặc biệt với độ sâu tối ưu 23 bước.
 - **Kết luận**:
-  - Các thuật toán heuristic-based (A*, IDA*) phù hợp nhất cho 8-puzzle nhờ cân bằng giữa độ tối ưu và hiệu suất.
-  - Các thuật toán như Genetic Algorithm và Q-Learning phù hợp với môi trường phức tạp, nhưng cần tối ưu hóa thêm.
-  - CSPs (như MAC) hiệu quả khi không gian trạng thái nhỏ, nhưng không tối ưu cho 8-puzzle.
+  - A* (0.2 giây, 23 bước) là lựa chọn tối ưu, cân bằng tốc độ, tính hoàn chỉnh, và tính tối ưu.
+  - Greedy, Beam Search (0.02 giây) phù hợp khi ưu tiên tốc độ, nhưng không tối ưu.
+  - Chậm và không thực tế: IDS (5.94 giây, 29 bước), DFS (7113 bước).
+  - Không phù hợp: CSP, Q-Learning, AND-OR, Hill Climbing, Genetic Algorithm thất bại do mô hình hoặc triển khai không phù hợp với 8-Puzzle (fully observable, deterministic).
+  - Belief State Search, Q-Learning có thể thành công nếu khắc phục lỗi triển khai hoặc tăng huấn luyện.
 
-**Hướng phát triển**: Tối ưu hóa thuật toán (ví dụ: giảm bộ nhớ cho A\*).
+**Hướng phát triển**: Tối ưu hóa, cải thiện các thuật toán.
 
 ## Link video báo cáo
 https://drive.google.com/drive/folders/1hSSgNApQ3fzj2GGYJvvBUyq5nF_NH10B?usp=sharing
