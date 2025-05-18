@@ -4,9 +4,7 @@
 
 ## Mục tiêu
 
-Mục tiêu của dự án 8-Puzzle Solver là phát triển một ứng dụng giải bài toán 8-puzzle bằng cách triển khai và so sánh hiệu suất của nhiều thuật toán tìm kiếm và tối ưu hóa khác nhau. Dự án tập trung vào:
-
-- Xây dựng giao diện đồ họa (GUI) để hiển thị trạng thái ban đầu, trạng thái mục tiêu, và tiến trình giải.
+- Xây dựng giao diện đồ họa để hiển thị trạng thái ban đầu, trạng thái mục tiêu, và các bước giải chi tiết.
 
 - Triển khai 6 nhóm thuật toán:
 
@@ -14,7 +12,7 @@ Mục tiêu của dự án 8-Puzzle Solver là phát triển một ứng dụng 
   - Tìm kiếm có thông tin: Greedy, A*, IDA*.
   - Tìm kiếm cục bộ: Beam Search, Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Genetic Algorithm, Simulated Annealing.
   - Môi trường phức tạp: AND-OR Search, Belief State Search, Searching with Partial Observation.
-  - CSPs: Backtracking, Backtracking with Forward Checking, Maintaining Arc-Consistency.
+  - CSPs: AC-3, Backtracking, Backtracking with Forward Checking.
   - Học tăng cường: Q-Learning.
 
 - Đánh giá hiệu suất của các thuật toán dựa trên số bước và thời gian thực hiện.
@@ -27,7 +25,11 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 - **Trạng thái ban đầu**: `[[2, 6, 5], [0, 8, 7], [4, 3, 1]]`
 
+  ![image](https://github.com/user-attachments/assets/c8fb5961-f4f2-418c-9563-1bfd0a018ed3)
+
 - **Trạng thái mục tiêu**: `[[1, 2, 3], [4, 5, 6], [7, 8, 0]]`
+
+  ![image](https://github.com/user-attachments/assets/98413488-d190-4264-9d41-5a7f83353185)
 
 ## Nội dung
 
@@ -36,11 +38,12 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
 - Thành phần chính: Bài toán 8-puzzle được mô hình hóa như một bài toán tìm kiếm không gian trạng thái, bao gồm:
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
   - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
   - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
-  - Hàm chuyển trạng thái: Tạo các trạng thái lân cận bằng cách hoán đổi ô trống với ô liền kề.
-  - Hàm đánh giá: Kiểm tra xem trạng thái hiện tại có phải là trạng thái mục tiêu không.
+  - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
+  - Hàm heuristic: Hàm ước lượng chi phí từ trạng thái hiện tại đến mục tiêu (dùng trong các thuật toán như A*).
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu, thể hiện đường đi tối ưu (đối với UCS) hoặc đường đi khả thi (đối với BFS, DFS, IDS).
 
 **Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
@@ -82,7 +85,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 **Nhận xét về hiệu suất:**
 
 - Greedy: Nhanh chóng nhờ chỉ dựa vào heuristic (Manhattan Distance), nhưng không đảm bảo tìm ra đường đi tối ưu và có thể bị kẹt ở ngõ cụt.
-- A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán (như Manhattan Distance). Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
+- A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán. Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
 - IDA*: Tiết kiệm bộ nhớ hơn A* bằng cách giới hạn ngưỡng heuristic, nhưng có thể chậm hơn với các trạng thái có heuristic phức tạp hoặc không gian trạng thái lớn.
 
 ### Các thuật toán Tìm kiếm cục bộ (Beam Search, Stochastic Hill Climbing, Steepest-Ascent Hill Climbing, Simple Hill Climbing, Genetic Algorithm, Simulated Annealing)
@@ -153,20 +156,19 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - Solution: Đường đi từ trạng thái ban đầu đến mục tiêu, thỏa mãn tất cả ràng buộc.
 
 **Hình ảnh GIF và so sánh hiệu suất:**
+#### AC-3
 
 #### Backtracking Search
 
 #### Backtracking with Forward Checking
 
-#### Maintaining Arc-Consistency
-
 **Hình ảnh so sánh hiệu suất của các thuật toán:**
 
 **Nhận xét về hiệu suất:**
 
+- AC-3: Hiệu quả hơn nhờ duy trì tính nhất quán cung trong suốt quá trình tìm kiếm, giảm số trạng thái cần kiểm tra. Tuy nhiên, việc chạy có thể tốn thời gian với các trạng thái phức tạp.
 - Backtracking Search: Cơ bản và dễ triển khai, nhưng hiệu suất thấp do phải thử nghiệm nhiều trạng thái không hợp lệ, đặc biệt với không gian trạng thái lớn.
 - Backtracking with Forward Checking: Cải thiện hiệu suất bằng cách loại bỏ sớm các giá trị không hợp lệ, giảm số lượng trạng thái cần kiểm tra, nhưng vẫn có thể chậm nếu ràng buộc phức tạp.
-- Maintaining Arc-Consistency (MAC): Hiệu quả hơn nhờ duy trì tính nhất quán cung (arc-consistency) trong suốt quá trình tìm kiếm, giảm số trạng thái cần kiểm tra. Tuy nhiên, việc chạy `ac3` có thể tốn thời gian với các trạng thái phức tạp.
 
 ### Các thuật toán Học tăng cường (Q-Learning)
 
@@ -192,15 +194,18 @@ Dự án 8-Puzzle Solver đã thành công trong việc triển khai 6 nhóm thu
 - **GUI**: Người dùng có thể nhập trạng thái tùy chỉnh, quan sát tiến trình giải qua animation.
 - **Triển khai thuật toán**: Đa dạng từ cơ bản (BFS, DFS) đến nâng cao (Belief State Search, Q-Learning).
 - **Hiệu suất**:
-  - **Nhanh nhất**: A* (trung bình 0.015s, 28 bước) và IDA* (trung bình 0.020s, 28 bước) nhờ heuristic hiệu quả.
-  - **Chậm nhất**: Genetic Algorithm (trung bình 2.5s) và Q-Learning (trung bình 3.0s) do cần huấn luyện.
-  - Belief State Search hiệu quả trong môi trường không chắc chắn, nhưng tốn tài nguyên (trung bình 1.8s).
-- **Bài học rút ra**:
+  - **Nhanh nhất**: A* và IDA* nhờ heuristic hiệu quả.
+  - **Chậm nhất**: GA và Q-Learning do cần huấn luyện.
+  - Belief State Search hiệu quả trong môi trường không chắc chắn, nhưng tốn tài nguyên.
+- **Kết luận**:
   - Các thuật toán heuristic-based (A*, IDA*) phù hợp nhất cho 8-puzzle nhờ cân bằng giữa độ tối ưu và hiệu suất.
   - Các thuật toán như Genetic Algorithm và Q-Learning phù hợp với môi trường phức tạp, nhưng cần tối ưu hóa thêm.
   - CSPs (như MAC) hiệu quả khi không gian trạng thái nhỏ, nhưng không tối ưu cho 8-puzzle.
 
-**Hướng phát triển**: Tối ưu hóa thuật toán (ví dụ: giảm bộ nhớ cho A\*), hỗ trợ lưới lớn hơn (15-puzzle), hoặc tích hợp học sâu để dự đoán heuristic.
+**Hướng phát triển**: Tối ưu hóa thuật toán (ví dụ: giảm bộ nhớ cho A\*).
 
 ## Link video báo cáo
 https://drive.google.com/drive/folders/1hSSgNApQ3fzj2GGYJvvBUyq5nF_NH10B?usp=sharing
+
+## Link github
+https://github.com/Quan-Man/Personal-Project-AI.git
