@@ -1,5 +1,5 @@
 # Personal-Project-AI: 8-Puzzle Solver with algorithms
-## Họ và tên: Quan Gia Mẫn  -  MSSV: 23133079
+## Họ và tên: Quan Gia Mẫn  -  MSSV: 23133042
 ## Lớp ARIN330585_05 xin chuyển qua lớp chiều thứ 5 (HKII 2024-2025)
 
 ## Mục tiêu
