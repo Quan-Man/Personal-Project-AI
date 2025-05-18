@@ -202,17 +202,5 @@ Dự án 8-Puzzle Solver đã thành công trong việc triển khai 6 nhóm thu
 
 **Hướng phát triển**: Tối ưu hóa thuật toán (ví dụ: giảm bộ nhớ cho A\*), hỗ trợ lưới lớn hơn (15-puzzle), hoặc tích hợp học sâu để dự đoán heuristic.
 
-## Hướng dẫn cài đặt và chạy
-
-### Yêu cầu
-
-- Python 3.8 trở lên.
-- Các thư viện:
-  - `pygame`: Để hiển thị giao diện đồ họa (`pip install pygame`).
-  - `numpy`: Để xử lý mảng và tính toán (`pip install numpy`).
-  - `matplotlib`: Để vẽ biểu đồ so sánh hiệu suất (`pip install matplotlib`).
-
-### Cách chạy
-- Cài đặt pygame: 'pip install pygame'
-- Cài đặt numpy để xử lý mảng và tính toán: 'pip install numpy'
-- Chạy: 'python gui.py'
+## Link video báo cáo
+https://drive.google.com/drive/folders/1hSSgNApQ3fzj2GGYJvvBUyq5nF_NH10B?usp=sharing
