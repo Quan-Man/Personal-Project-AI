@@ -9,8 +9,8 @@
 - Triển khai 6 nhóm thuật toán:
 
   - Uninformed Search: BFS, DFS, UCS, IDS.
-  - Informed Search: Greedy, A*, IDA*.
-  - Local Search: Beam Search, Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Genetic Algorithm, Simulated Annealing.
+  - Informed Search: A*, IDA*, Greedy.
+  - Local Search: Simple Hill Climbing, Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simulated Annealing, Beam Search, Genetic Algorithm.
   - Complex Environment: AND-OR Search, Belief State Search, Searching with Partial Observation.
   - CSPS: AC-3, Backtracking, Backtracking with Forward Checking.
   - Reinforcement Learning: Q-Learning.
@@ -48,12 +48,30 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
 
+#### DFS:
+
+![image](https://github.com/user-attachments/assets/dcca876f-1e60-4aab-94b0-b8d67451fadc)
+
+#### UCS:
+
+![ucs](https://github.com/user-attachments/assets/d4058bb5-9cab-4d15-a51b-dbc74cc43175)
+
+#### IDS:
+
+![ids](https://github.com/user-attachments/assets/bceaad04-d580-4db2-8c6c-5c9d0c48a556)
+
+**So sánh hiệu suất các thuật toán:**
+
+![image](https://github.com/user-attachments/assets/6536b101-63c7-4418-863c-37a039058ca9)
+
 **Nhận xét về hiệu suất:**
 
-- BFS: Đảm bảo tìm ra đường đi ngắn nhất nhưng tiêu tốn nhiều bộ nhớ do phải lưu trữ tất cả các nút ở cùng cấp độ. Hiệu suất giảm mạnh với các trạng thái phức tạp hoặc sâu.
-- DFS: Nhanh hơn về bộ nhớ vì chỉ lưu trữ một nhánh, nhưng dễ bị lặp vô hạn hoặc tìm ra đường đi không tối ưu nếu không giới hạn độ sâu.
-- UCS: Tìm đường đi tối ưu dựa trên chi phí (mỗi bước có chi phí 1), nhưng chậm hơn BFS do cần tính toán và sắp xếp chi phí, đặc biệt với không gian trạng thái lớn.
-- IDS: Kết hợp ưu điểm của DFS và BFS, tiết kiệm bộ nhớ hơn BFS nhưng có thể chậm hơn do lặp lại việc tìm kiếm ở các độ sâu khác nhau.
+- BFS: Đáng tin cậy, đảm bảo đường đi ngắn nhất, nhưng thời gian chạy khá cao do độ phức tạp không gian và thời gian tăng theo cấp số nhân.
+- DFS: Không phù hợp cho 8-Puzzle do thiếu tính tối ưu và dễ đi vào nhánh sâu không hiệu quả. Thời gian nhanh là ưu điểm duy nhất, nhưng không bù đắp được chất lượng giải pháp.
+- UCS: Đáng tin cậy như BFS nhưng kém hiệu quả hơn về thời gian do chi phí tính toán cao hơn.
+- IDS: Tiết kiệm bộ nhớ hơn BFS/UCS, nhưng thời gian chạy cao và kết quả không tối ưu.
+
+  Tóm lại: BFS và UCS hoạt động đúng như kỳ vọng: tìm đường đi ngắn nhất, nhưng tốn thời gian và bộ nhớ. DFS nhanh nhưng không thực tế do đường đi quá dài. IDS có vấn đề (29 bước, 5.94 giây), có thể do lỗi triển khai hoặc không tối ưu hóa.
 
 ### 2.2. Informed Search (A*, IDA*, Greedy)
 
@@ -66,11 +84,31 @@ https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
+**Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
+
+#### A*:
+
+![astar](https://github.com/user-attachments/assets/df78be3a-3c5c-485c-b65d-42abed985fa4)
+
+#### IDA*:
+
+![ida](https://github.com/user-attachments/assets/0ce3630d-3b4e-4e3b-aa7b-7cdda0534da2)
+
+#### Greedy:
+
+![greedy](https://github.com/user-attachments/assets/fc59ef53-35e6-4e67-bb83-9a006e055e7e)
+
+**So sánh hiệu suất các thuật toán:**
+
+![image](https://github.com/user-attachments/assets/cf557a89-4d7b-41a3-b370-1015792a581f)
+
 **Nhận xét về hiệu suất:**
 
-- Greedy: Nhanh chóng nhờ chỉ dựa vào heuristic (Manhattan Distance), nhưng không đảm bảo tìm ra đường đi tối ưu và có thể bị kẹt ở ngõ cụt.
-- A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán. Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
-- IDA*: Tiết kiệm bộ nhớ hơn A* bằng cách giới hạn ngưỡng heuristic, nhưng có thể chậm hơn với các trạng thái có heuristic phức tạp hoặc không gian trạng thái lớn.
+- A*: Là lựa chọn xuất sắc, cân bằng giữa tính tối ưu và tốc độ, vượt trội so với BFS/UCS nhờ heuristic.
+- IDA*: Đáng tin cậy về tính tối ưu, nhưng thời gian chạy cao làm nó kém hấp dẫn hơn A* trong trường hợp này.
+- Greedy: Phù hợp khi cần tốc độ cao và chấp nhận giải pháp không tối ưu, nhưng không nên dùng khi cần đường đi ngắn nhất.
+
+  Tóm lại: Hiệu suất thực tế của A* phù hợp và tốt hơn lý thuyết, đặc biệt về thời gian, nhờ heuristic Manhattan và kiểm tra visited hiệu quả. IDA* đạt tính tối ưu như lý thuyết, nhưng thời gian thực tế (2.34 giây) cao hơn kỳ vọng. Greedy nhanh, không hoàn chỉnh, không tối ưu.
 
 ### 2.3. Local Search (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm)
 
