@@ -2,7 +2,7 @@
 ## Họ và tên: Quan Gia Mẫn  -  MSSV: 23133042
 ## Lớp ARIN330585_05 xin chuyển qua lớp chiều thứ 5 (HKII 2024-2025)
 
-## Mục tiêu
+## 1. Mục tiêu
 
 - Xây dựng giao diện đồ họa để hiển thị trạng thái ban đầu, trạng thái mục tiêu, và các bước giải chi tiết.
 
@@ -29,9 +29,9 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
   ![image](https://github.com/user-attachments/assets/98413488-d190-4264-9d41-5a7f83353185)
 
-## Nội dung
+## 2. Nội dung
 
-### Các thuật toán Tìm kiếm không có thông tin (BFS, DFS, UCS, IDS)
+### 2.1. Uninformed Search (BFS, DFS, UCS, IDS)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
@@ -42,6 +42,12 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
+**Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
+
+#### BFS:
+
+https://github.com/user-attachments/assets/ce0b6e04-d26b-4673-b69b-e7034b8ec487
+
 **Nhận xét về hiệu suất:**
 
 - BFS: Đảm bảo tìm ra đường đi ngắn nhất nhưng tiêu tốn nhiều bộ nhớ do phải lưu trữ tất cả các nút ở cùng cấp độ. Hiệu suất giảm mạnh với các trạng thái phức tạp hoặc sâu.
@@ -49,7 +55,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - UCS: Tìm đường đi tối ưu dựa trên chi phí (mỗi bước có chi phí 1), nhưng chậm hơn BFS do cần tính toán và sắp xếp chi phí, đặc biệt với không gian trạng thái lớn.
 - IDS: Kết hợp ưu điểm của DFS và BFS, tiết kiệm bộ nhớ hơn BFS nhưng có thể chậm hơn do lặp lại việc tìm kiếm ở các độ sâu khác nhau.
 
-### Các thuật toán Tìm kiếm có thông tin (A*, IDA*, Greedy)
+### 2.2. Informed Search (A*, IDA*, Greedy)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
@@ -66,7 +72,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán. Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
 - IDA*: Tiết kiệm bộ nhớ hơn A* bằng cách giới hạn ngưỡng heuristic, nhưng có thể chậm hơn với các trạng thái có heuristic phức tạp hoặc không gian trạng thái lớn.
 
-### Các thuật toán Tìm kiếm cục bộ (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm)
+### 2.3. Local Search (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
@@ -77,7 +83,6 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
-
 **Nhận xét về hiệu suất:**
 
 - Beam Search: Hiệu quả với beam_width nhỏ, giảm bộ nhớ so với tìm kiếm toàn cục, nhưng có thể bỏ lỡ lời giải nếu beam_width quá hẹp hoặc không gian trạng thái quá lớn.
@@ -87,12 +92,15 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - Genetic Algorithm: Rất linh hoạt và có thể tìm ra lời giải trong không gian phức tạp, nhưng cần nhiều thời gian huấn luyện và tài nguyên do sử dụng quần thể và tiến hóa qua nhiều thế hệ.
 - Simulated Annealing: Khắc phục nhược điểm của Hill Climbing bằng cách cho phép chấp nhận trạng thái xấu hơn với xác suất, tránh được cực trị cục bộ. Hiệu suất tốt hơn Hill Climbing trong các trạng thái phức tạp, nhưng phụ thuộc vào tham số nhiệt độ (T, cooling_rate) và có thể chậm nếu cần nhiều bước để hội tụ.
 
-### Các thuật toán trong môi trường phức tạp (AND-OR Search, Belief State Search, Searching with Partial Observation)
+### 2.4. Complex Environment (AND-OR Search, Belief State Search, Searching with Partial Observation)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
-- Thành phần chính: Xử lý trạng thái không chắc chắn (belief states) và quan sát một phần.
-- Solution: Đường đi dựa trên cập nhật belief states.
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle Trong môi trường phức tạp, bao gồm belief states (tập hợp trạng thái khả thi).
+  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0). Cấu hình ban đầu hoặc belief state ban đầu.
+  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối. Cấu hình mong muốn hoặc belief state chứa mục tiêu.
+  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
+- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
 
 **Nhận xét về hiệu suất:**
 
@@ -100,7 +108,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - Belief State Search: Hiệu quả trong môi trường không chắc chắn (partial observation), nhưng tốn nhiều bộ nhớ và thời gian để quản lý và cập nhật belief states, đặc biệt với số lượng ô không xác định lớn.
 - Searching with Partial Observation: Linh hoạt và thích nghi tốt với thông tin quan sát từng bước, nhưng hiệu suất phụ thuộc vào độ chính xác của quan sát và có thể thất bại nếu belief states không còn khả thi.
 
-### Các thuật toán CSPs (Backtracking, Backtracking with Forward Checking, Maintaining Arc-Consistency)
+### 2.5. CSPS (AC-3, Backtracking, Backtracking with Forward Checking)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
@@ -112,13 +120,20 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 - Solution: Đường đi từ trạng thái ban đầu đến mục tiêu, thỏa mãn tất cả ràng buộc.
 
+  - Không gian trạng thái: Tập hợp tất cả các cấu hình có thể của bảng 8-Puzzle (3x3 grid với 8 ô số từ 1-8 và 1 ô trống). Mỗi trạng thái là một cách sắp xếp các ô.
+  - Trạng thái ban đầu: Lưới 3x3 với 8 ô số và 1 ô trống (0).
+  - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
+  - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
+  - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
+- Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu.
+
 **Nhận xét về hiệu suất:**
 
 - AC-3: Hiệu quả hơn nhờ duy trì tính nhất quán cung trong suốt quá trình tìm kiếm, giảm số trạng thái cần kiểm tra. Tuy nhiên, việc chạy có thể tốn thời gian với các trạng thái phức tạp.
 - Backtracking Search: Cơ bản và dễ triển khai, nhưng hiệu suất thấp do phải thử nghiệm nhiều trạng thái không hợp lệ, đặc biệt với không gian trạng thái lớn.
 - Backtracking with Forward Checking: Cải thiện hiệu suất bằng cách loại bỏ sớm các giá trị không hợp lệ, giảm số lượng trạng thái cần kiểm tra, nhưng vẫn có thể chậm nếu ràng buộc phức tạp.
 
-### Các thuật toán Học tăng cường (Q-Learning)
+### 2.6. Reinforcement Learning (Q-Learning)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
