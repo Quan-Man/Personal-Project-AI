@@ -2,14 +2,13 @@ import pygame
 import numpy as np
 import time
 import asyncio
-import platform
-from puzzle_solver import bfs, dfs, ucs, iddfs
+import puzzle_solver
 
 # Initialize Pygame
 pygame.init()
 
 # Constants
-WIDTH, HEIGHT = 800, 650
+WIDTH, HEIGHT = 950, 690
 FPS = 60
 FONT = pygame.font.SysFont("Arial", 24)
 SMALL_FONT = pygame.font.SysFont("Arial", 18, bold=True)
@@ -33,21 +32,97 @@ TEAL = (0, 128, 128)
 
 class RadioButton:
     def __init__(self, x, y, text, value):
-        self.rect = pygame.Rect(x, y, 20, 20)
+        self.rect = pygame.Rect(x, y, 30, 30)  # Larger hitbox
         self.text = text
         self.value = value
         self.selected = False
 
     def draw(self, screen):
-        pygame.draw.circle(screen, BLACK, self.rect.center, 10, 2)
+        center = (self.rect.centerx, self.rect.centery)
+        pygame.draw.circle(screen, BLACK, center, 12, 2)
         if self.selected:
-            pygame.draw.circle(screen, BLACK, self.rect.center, 5)
+            pygame.draw.circle(screen, BLUE, center, 6)
         text_surface = SMALL_FONT.render(self.text, True, BLACK)
-        screen.blit(text_surface, (self.rect.x + 30, self.rect.y - 5))
+        screen.blit(text_surface, (self.rect.x + 40, self.rect.y + 5))
+
+    def handle_event(self, mouse_pos):
+        if self.rect.collidepoint(mouse_pos):
+            return self.value
+        return None
+
+class ScrollablePanel:
+    def __init__(self, x, y, width, height):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.virtual_height = 0
+        self.virtual_surface = None
+        self.offset_y = 0
+        self.scrollbar_rect = pygame.Rect(x + width - 20, y, 20, height)
+        self.scrollbar_handle = pygame.Rect(x + width - 20, y, 20, 0)
+        self.radio_buttons = []
+        self.labels = []
+        self.dragging_scrollbar = False
+
+    def add_radio_button(self, x, y, text, value):
+        button = RadioButton(x, y, text, value)
+        self.radio_buttons.append(button)
+        self.virtual_height = max(self.virtual_height, y + 40)
+
+    def add_label(self, x, y, text):
+        self.labels.append((x, y, text))
+        self.virtual_height = max(self.virtual_height, y + 40)
+
+    def update_scrollbar(self):
+        if self.virtual_height <= self.rect.height:
+            self.scrollbar_handle.height = self.scrollbar_rect.height
+            self.offset_y = 0
+        else:
+            handle_ratio = self.rect.height / self.virtual_height
+            self.scrollbar_handle.height = max(20, self.scrollbar_rect.height * handle_ratio)
+            max_offset = self.virtual_height - self.rect.height
+            self.offset_y = min(max(0, self.offset_y), max_offset)
+            handle_y = self.scrollbar_rect.y + (self.offset_y / max_offset) * (self.scrollbar_rect.height - self.scrollbar_handle.height)
+            self.scrollbar_handle.y = handle_y
+
+    def draw(self, screen):
+        if not self.virtual_surface or self.virtual_surface.get_height() != self.virtual_height:
+            self.virtual_surface = pygame.Surface((self.rect.width, self.virtual_height))
+        self.virtual_surface.fill(LIGHT_GRAY)
+        for x, y, text in self.labels:
+            label_surface = SMALL_FONT.render(text, True, BLACK)
+            self.virtual_surface.blit(label_surface, (x, y))
+        for button in self.radio_buttons:
+            button.draw(self.virtual_surface)
+        screen.set_clip(self.rect)
+        screen.blit(self.virtual_surface, (self.rect.x, self.rect.y - self.offset_y))
+        screen.set_clip(None)
+        if self.virtual_height > self.rect.height:
+            pygame.draw.rect(screen, GRAY, self.scrollbar_rect)
+            pygame.draw.rect(screen, DARK_GRAY, self.scrollbar_handle)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
-            return self.value
+            # Transform mouse position to virtual surface coordinates
+            mouse_x, mouse_y = event.pos
+            virtual_mouse_y = mouse_y + self.offset_y - self.rect.y
+            for button in self.radio_buttons:
+                value = button.handle_event((mouse_x - self.rect.x, virtual_mouse_y))
+                if value:
+                    for b in self.radio_buttons:
+                        b.selected = (b.value == value)
+                    return value
+        if event.type == pygame.MOUSEBUTTONDOWN and self.scrollbar_rect.collidepoint(event.pos):
+            if self.scrollbar_handle.collidepoint(event.pos):
+                self.dragging_scrollbar = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.dragging_scrollbar = False
+        elif event.type == pygame.MOUSEMOTION and self.dragging_scrollbar:
+            max_offset = self.virtual_height - self.rect.height
+            dy = event.rel[1] * (self.virtual_height / (self.scrollbar_rect.height - self.scrollbar_handle.height))
+            self.offset_y = min(max(0, self.offset_y + dy), max_offset)
+            self.update_scrollbar()
+        if event.type == pygame.MOUSEWHEEL and self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.offset_y = min(max(0, self.offset_y - event.y * 30), self.virtual_height - self.rect.height)
+            self.update_scrollbar()
         return None
 
 class Button:
@@ -87,16 +162,48 @@ class PuzzleApp:
         self.goal_board = self.goal_state.copy()
         self.solution_board = np.zeros((3, 3), dtype=int)
         self.auto_board = np.zeros((3, 3), dtype=int)
+        self.feedback_timer = 0
 
-        # Radio buttons for algorithms, moved to top-right
+        # Algorithm configuration
+        self.algorithms = {
+            "bfs": {"func": puzzle_solver.bfs, "display": "BFS", "group": "Uninformed Search"},
+            "dfs": {"func": puzzle_solver.dfs, "display": "DFS", "group": "Uninformed Search"},
+            "ucs": {"func": puzzle_solver.ucs, "display": "UCS", "group": "Uninformed Search"},
+            "ids": {"func": puzzle_solver.ids, "display": "IDS", "group": "Uninformed Search"},
+            "a_star": {"func": puzzle_solver.a_star, "display": "A*", "group": "Informed Search"},
+            "ida_star": {"func": puzzle_solver.ida_star, "display": "IDA*", "group": "Informed Search"},
+            "gbfs": {"func": puzzle_solver.gs, "display": "Greedy", "group": "Informed Search"},
+            "shc": {"func": puzzle_solver.shc, "display": "Simple Hill-Climbing", "group": "Local Search"},
+            "sahc": {"func": puzzle_solver.sahc, "display": "Steepest-Ascent Hill-Climbing", "group": "Local Search"},
+            "sthc": {"func": puzzle_solver.sthc, "display": "Stochastic Hill-Climbing", "group": "Local Search"},
+            "sa": {"func": puzzle_solver.simulated_annealing, "display": "Simulated Annealing", "group": "Local Search"},
+            "beam": {"func": puzzle_solver.beam, "display": "Local Beam", "group": "Local Search"},
+            "ga": {"func": puzzle_solver.ga, "display": "GA", "group": "Local Search"},
+            "aos": {"func": puzzle_solver.and_or_search, "display": "AND-OR", "group": "Complex Environment"},
+            "bs": {"func": puzzle_solver.bs, "display": "Belief State", "group": "Complex Environment"},
+            "swpo": {"func": puzzle_solver.swpo, "display": "Search With Partial Observation", "group": "Complex Environment"},
+            "ac_3": {"func": puzzle_solver.ac_3, "display": "AC-3", "group": "CSPS"},
+            "backtracking": {"func": puzzle_solver.backtracking, "display": "Backtracking", "group": "CSPS"},
+            "backtracking_fc": {"func": puzzle_solver.backtracking_fc, "display": "Backtracking With Forward Checking", "group": "CSPS"},
+            "q_learning": {"func": puzzle_solver.q_learning, "display": "Q-learning", "group": "Reinforcement Learning"},
+        }
+
+        # Scrollable panel
         self.algorithm = "bfs"
-        self.radio_buttons = [
-            RadioButton(620, 80, "BFS", "bfs"),
-            RadioButton(620, 110, "DFS", "dfs"),
-            RadioButton(620, 140, "UCS", "ucs"),
-            RadioButton(620, 170, "IDDFS", "iddfs"),
-        ]
-        self.radio_buttons[0].selected = True
+        self.panel = ScrollablePanel(620, 40, 300, 600)
+        y_pos = 20
+        current_group = ""
+        for algo_key, algo_info in self.algorithms.items():
+            group = algo_info["group"]
+            if group != current_group:
+                self.panel.add_label(10, y_pos, group)
+                y_pos += 40
+                current_group = group
+            self.panel.add_radio_button(10, y_pos, algo_info["display"], algo_key)
+            if algo_key == "bfs":
+                self.panel.radio_buttons[-1].selected = True
+            y_pos += 40
+        self.panel.update_scrollbar()
 
         # Buttons
         self.auto_button = Button(150, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "SOLVE", ORANGE)
@@ -129,9 +236,9 @@ class PuzzleApp:
         self.computation_time = 0.0
         self.next_button.enabled = False
         self.prev_button.enabled = False
+        self.feedback_timer = 0
 
     def update_timer(self):
-        # Return formatted computation time if set, otherwise empty
         if self.computation_time > 0:
             return f"Time: {self.computation_time:.2f} second"
         return ""
@@ -148,33 +255,28 @@ class PuzzleApp:
         self.next_button.enabled = False
         self.prev_button.enabled = False
         self.computation_time = 0.0
+        self.feedback_timer = 0
 
-        # Force screen update to show "Đang tìm lời giải..."
         self.draw()
         pygame.display.flip()
 
         start = self.start_board.copy()
         self.goal_state = self.goal_board.copy()
 
-        # Start timer
         self.start_time = time.time()
 
-        algorithm = self.algorithm
-        if algorithm == "bfs":
-            self.solution_steps = bfs(start, self.goal_state)
-        elif algorithm == "dfs":
-            self.solution_steps = dfs(start, self.goal_state)
-        elif algorithm == "ucs":
-            self.solution_steps = ucs(start, self.goal_state)
-        elif algorithm == "iddfs":
-            self.solution_steps = iddfs(start, self.goal_state)
+        solver_func = self.algorithms[self.algorithm]["func"]
+        result = solver_func(start, self.goal_state)
 
-        # Stop timer and store computation time
+        if result is not None and not isinstance(result, list):
+            result = [result]
+        self.solution_steps = result if result is not None else []
+
         self.computation_time = time.time() - self.start_time
 
         if self.solution_steps:
             self.result_text = ""
-            self.result_text_steps = f"Number of steps: {len(self.solution_steps)}"
+            self.result_text_steps = f"Number of steps: {len(self.solution_steps) - 1}"
             self.result_text_time = f"Time: {self.computation_time:.2f} second"
             self.auto_button.enabled = True
             self.auto_button.text = "STOP"
@@ -184,17 +286,15 @@ class PuzzleApp:
             self.solution_step_index = 0
             self.solution_board = self.solution_steps[0]
             self.auto_board = self.solution_steps[0]
-            # Force screen update to show result immediately
-            self.draw()
-            pygame.display.flip()
         else:
-            self.result_text = "No solution found !"
-            self.result_text_steps = "Number of steps: 0}"
-            self.result_text_time = f"Time: {self.computation_time:.2f} second"
+            self.result_text = "No solution found!" if self.algorithm != "pg" else "Policy-gradient not implemented!"
             self.result_text_steps = ""
             self.result_text_time = ""
             self.auto_button.text = "SOLVE"
             self.auto_solve = False
+
+        self.draw()
+        pygame.display.flip()
 
     def show_step(self):
         if self.step_index < len(self.solution_steps):
@@ -212,12 +312,11 @@ class PuzzleApp:
             return False
 
     def next_step(self):
-        if self.solution_step_index < len(self.solution_steps):
-            self.solution_board = self.solution_steps[self.solution_step_index]
+        if self.solution_step_index < len(self.solution_steps) - 1:
             self.solution_step_index += 1
+            self.solution_board = self.solution_steps[self.solution_step_index]
             self.prev_button.enabled = self.solution_step_index > 0
-            if self.solution_step_index >= len(self.solution_steps):
-                self.next_button.enabled = False
+            self.next_button.enabled = self.solution_step_index < len(self.solution_steps) - 1
 
     def previous_step(self):
         if self.solution_step_index > 0:
@@ -251,7 +350,6 @@ class PuzzleApp:
 
     def draw(self):
         self.screen.fill(LIGHT_GRAY)
-        # Draw board labels
         initial_label = SMALL_FONT.render("INITIAL STATE", True, BLACK)
         self.screen.blit(initial_label, (110, 20))
         target_label = SMALL_FONT.render("FINAL STATE", True, BLACK)
@@ -260,37 +358,27 @@ class PuzzleApp:
         self.screen.blit(solution_label, (135, 300))
         auto_label = SMALL_FONT.render("Auto Solve", True, BLACK)
         self.screen.blit(auto_label, (450, 300))
-        initial_label = SMALL_FONT.render("Uninformed Search", True, BLACK)
-        self.screen.blit(initial_label, (620, 40))
-        initial_label = SMALL_FONT.render("Solution", True, BLACK)
-        self.screen.blit(initial_label, (660, 250))
-        # Draw boards
         self.draw_board(self.start_board, 70, 50, WHITE)
         self.draw_board(self.goal_board, 400, 50, PURPLE)
         self.draw_board(self.solution_board, 70, 330, LIGHT_BLUE)
         self.draw_board(self.auto_board, 400, 330, GREEN)
-        # Draw step number for solution board
-        if np.any(self.solution_board):
-            step_text = f"Step {self.solution_step_index}/{len(self.solution_steps)}"
+        if self.solution_steps and np.any(self.solution_board):
+            step_text = f"Step {self.solution_step_index}/{len(self.solution_steps) - 1}"
             step_label = SMALL_FONT.render(step_text, True, BLACK)
             self.screen.blit(step_label, (125, 520))
-        # Draw radio buttons
-        for radio in self.radio_buttons:
-            radio.draw(self.screen)
-        # Draw buttons
+        self.panel.draw(self.screen)
         self.auto_button.draw(self.screen)
         self.reset_button.draw(self.screen)
         self.prev_button.draw(self.screen)
         self.next_button.draw(self.screen)
-        # Draw result
         if self.result_text_steps and self.result_text_time:
             steps_text = SMALL_FONT.render(self.result_text_steps, True, BLACK)
-            self.screen.blit(steps_text, (620, 270))
+            self.screen.blit(steps_text, (270, 620))
             time_text = SMALL_FONT.render(self.result_text_time, True, BLACK)
-            self.screen.blit(time_text, (620, 290))
+            self.screen.blit(time_text, (270, 640))
         else:
             result_text = SMALL_FONT.render(self.result_text, True, BLACK)
-            self.screen.blit(result_text, (50, 600))
+            self.screen.blit(result_text, (270, 600))
         pygame.display.flip()
 
     async def update_loop(self):
@@ -309,18 +397,21 @@ class PuzzleApp:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                for radio in self.radio_buttons:
-                    value = radio.handle_event(event)
-                    if value:
-                        self.algorithm = value
-                        for r in self.radio_buttons:
-                            r.selected = (r.value == value)
+                value = self.panel.handle_event(event)
+                if value:
+                    print(f"Selected algorithm: {self.algorithms[value]['display']} ({value})")
+                    self.algorithm = value
+                    for button in self.panel.radio_buttons:
+                        button.selected = (button.value == value)
+                    self.feedback_timer = time.time() + 2
+                    self.draw()
+                    pygame.display.flip()
                 if self.auto_button.handle_event(event) in ["SOLVE", "STOP"]:
                     if self.auto_button.text == "SOLVE":
-                        if not self.solution_steps:  # Solve only if no solution exists
+                        if not self.solution_steps:
                             self.solve()
                         else:
-                            self.toggle_auto_solve()  # Resume auto-solve
+                            self.toggle_auto_solve()
                     else:
                         self.toggle_auto_solve()
                 if self.reset_button.handle_event(event) == "RESET":
@@ -333,10 +424,6 @@ class PuzzleApp:
             self.draw()
             await asyncio.sleep(1.0 / FPS)
 
-if platform.system() == "Emscripten":
+if __name__ == "__main__":
     app = PuzzleApp()
-    asyncio.ensure_future(app.main())
-else:
-    if __name__ == "__main__":
-        app = PuzzleApp()
-        asyncio.run(app.main())
+    asyncio.run(app.main())
