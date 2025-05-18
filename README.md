@@ -43,20 +43,7 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
   - Trạng thái mục tiêu: Lưới 3x3 với các ô số từ 1-8 và ô trống ở vị trí cuối.
   - Hành động: Di chuyển ô trống lên, xuống, trái, hoặc phải.
   - Hàm chi phí: Chi phí của mỗi hành động - 1 cho mỗi di chuyển trong 8-Puzzle.
-  - Hàm heuristic: Hàm ước lượng chi phí từ trạng thái hiện tại đến mục tiêu (dùng trong các thuật toán như A*).
 - Solution: Là danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu, thể hiện đường đi tối ưu (đối với UCS) hoặc đường đi khả thi (đối với BFS, DFS, IDS).
-
-**Hình ảnh GIF của từng thuật toán khi áp dụng lên trò chơi:**
-
-#### BFS
-
-#### DFS
-
-#### UCS
-
-#### IDS
-
-**Hình ảnh so sánh hiệu suất của các thuật toán:**
 
 **Nhận xét về hiệu suất:**
 
@@ -65,22 +52,13 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - UCS: Tìm đường đi tối ưu dựa trên chi phí (mỗi bước có chi phí 1), nhưng chậm hơn BFS do cần tính toán và sắp xếp chi phí, đặc biệt với không gian trạng thái lớn.
 - IDS: Kết hợp ưu điểm của DFS và BFS, tiết kiệm bộ nhớ hơn BFS nhưng có thể chậm hơn do lặp lại việc tìm kiếm ở các độ sâu khác nhau.
 
-### Các thuật toán Tìm kiếm có thông tin (Greedy, A*, IDA*)
+### Các thuật toán Tìm kiếm có thông tin (A*, IDA*, Greedy)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
 - Thành phần chính: Ngoài các thành phần cơ bản, thêm hàm heuristic (Manhattan Distance) để định hướng tìm kiếm.
+- Hàm heuristic: Hàm ước lượng chi phí từ trạng thái hiện tại đến mục tiêu (dùng trong các thuật toán như A*).
 - Solution: Là đường đi ngắn nhất (A*) hoặc đường đi khả thi (Greedy, IDA*) dựa trên heuristic.
-
-**Hình ảnh GIF của từng thuật toán:**
-
-#### Greedy
-
-#### A\*
-
-#### IDA\*
-
-**Hình ảnh so sánh hiệu suất:**
 
 **Nhận xét về hiệu suất:**
 
@@ -88,28 +66,12 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 - A\*: Cân bằng giữa chi phí đã đi và heuristic, đảm bảo tìm đường đi tối ưu với hiệu suất tốt nếu heuristic là hợp lệ và nhất quán. Tuy nhiên, tốn bộ nhớ do sử dụng hàng đợi ưu tiên.
 - IDA*: Tiết kiệm bộ nhớ hơn A* bằng cách giới hạn ngưỡng heuristic, nhưng có thể chậm hơn với các trạng thái có heuristic phức tạp hoặc không gian trạng thái lớn.
 
-### Các thuật toán Tìm kiếm cục bộ (Beam Search, Stochastic Hill Climbing, Steepest-Ascent Hill Climbing, Simple Hill Climbing, Genetic Algorithm, Simulated Annealing)
+### Các thuật toán Tìm kiếm cục bộ (Steepest-Ascent Hill Climbing, Stochastic Hill Climbing, Simple Hill Climbing, Beam Search, Simulated Annealing, Genetic Algorithm,)
 
 **Các thành phần chính của bài toán tìm kiếm và solution**
 
 - Thành phần chính: Sử dụng heuristic để cải tiến trạng thái cục bộ, với Beam Search giới hạn số nút, Genetic Algorithm sử dụng quần thể và đột biến.
 - Solution: Đường đi khả thi, không nhất thiết tối ưu.
-
-**Hình ảnh GIF và so sánh hiệu suất:**
-
-#### Beam Search
-
-#### Simple Hill Climbing
-
-#### Steepest-Ascent Hill Climbing
-
-#### Stochastic Hill Climbing
-
-#### Genetic Algorithm
-
-#### Simulated Annealing
-
-**Hình ảnh so sánh hiệu suất của các thuật toán:**
 
 **Nhận xét về hiệu suất:**
 
@@ -126,16 +88,6 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 - Thành phần chính: Xử lý trạng thái không chắc chắn (belief states) và quan sát một phần.
 - Solution: Đường đi dựa trên cập nhật belief states.
-
-**Hình ảnh GIF và so sánh hiệu suất:**
-
-#### AND-OR Search
-
-#### Belief State Search
-
-#### Searching with Partial Observation
-
-**Hình ảnh so sánh hiệu suất của các thuật toán:**
 
 **Nhận xét về hiệu suất:**
 
@@ -155,15 +107,6 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 - Solution: Đường đi từ trạng thái ban đầu đến mục tiêu, thỏa mãn tất cả ràng buộc.
 
-**Hình ảnh GIF và so sánh hiệu suất:**
-#### AC-3
-
-#### Backtracking Search
-
-#### Backtracking with Forward Checking
-
-**Hình ảnh so sánh hiệu suất của các thuật toán:**
-
 **Nhận xét về hiệu suất:**
 
 - AC-3: Hiệu quả hơn nhờ duy trì tính nhất quán cung trong suốt quá trình tìm kiếm, giảm số trạng thái cần kiểm tra. Tuy nhiên, việc chạy có thể tốn thời gian với các trạng thái phức tạp.
@@ -176,12 +119,6 @@ Các thuật toán được thử nghiệm với trạng thái ban đầu và m�
 
 - Thành phần chính: Sử dụng Q-Table, phần thưởng, và chiến lược epsilon-greedy để học.
 - Solution: Đường đi học được từ huấn luyện.
-
-**Hình ảnh GIF và so sánh hiệu suất**
-
-#### Q-Learning
-
-**Hình ảnh so sánh hiệu suất của các thuật toán:**
 
 **Nhận xét về hiệu suất:**
 
